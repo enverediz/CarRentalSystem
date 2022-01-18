@@ -60,6 +60,12 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<ReservationManager>().As<IReservationService>().SingleInstance();
             builder.RegisterType<EfReservationDal>().As<IReservationDal>().SingleInstance();
 
+            builder.RegisterType<OperationClaimManager>().As<IOperationClaimService>().SingleInstance();
+            builder.RegisterType<EfOperationClaimDal>().As<IOperationClaimDal>().SingleInstance();
+
+            builder.RegisterType<UserOperationClaimManager>().As<IUserOperationClaimService>().SingleInstance();
+            builder.RegisterType<EfUserOperationClaimDal>().As<IUserOperationClaimDal>().SingleInstance();
+
             builder.RegisterType<UserManager>().As<IUserService>();
             builder.RegisterType<EfUserDal>().As<IUserDal>();
 
