@@ -10,22 +10,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Business.Adapters;
+using Business.Constants;
 
 namespace Business.Concrete
 {
     public class UserManager : IUserService
     {
         IUserDal _userDal;
+        IPersonCheckService _personCheckService;
 
-        public UserManager(IUserDal userDal)
+        public UserManager(IUserDal userDal, IPersonCheckService personCheckService)
         {
             _userDal = userDal;
+            _personCheckService = personCheckService;
         }
 
         [ValidationAspect(typeof(UserValidator))]
         public IResult Add(User user)
         {
-            IResult result = BusinessRules.Run(CheckIfEmailExists(user.Email));
+            IResult result = BusinessRules.Run(CheckIfEmailExists(user.Email), CheckIfRealPerson(user));
             if (result != null)
             {
                 return result;
@@ -76,6 +80,17 @@ namespace Business.Concrete
             if (result)
             {
                 return new ErrorResult();
+            }
+            return new SuccessResult();
+        }
+
+        private IResult CheckIfRealPerson(User user)
+        {
+            var result = _personCheckService.CheckIfRealPerson(user);
+            if (!result)
+            {
+                throw new Exception(Messages.IdentityIsIncorrect);
+                
             }
             return new SuccessResult();
         }

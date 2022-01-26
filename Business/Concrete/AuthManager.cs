@@ -1,6 +1,8 @@
 ﻿using Business.Abstract;
+using Business.Adapters;
 using Business.Constants;
 using Core.Entities.Concrete;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.JWT;
@@ -16,16 +18,16 @@ namespace Business.Concrete
     public class AuthManager : IAuthService
     {
         private IUserService _userService;
-        private ITokenHelper _tokenHelper;
+        private ITokenHelper _tokenHelper;        
 
         public AuthManager(IUserService userService, ITokenHelper tokenHelper)
         {
             _userService = userService;
-            _tokenHelper = tokenHelper;
+            _tokenHelper = tokenHelper;            
         }
 
         public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
-        {
+        {            
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
             var user = new User
@@ -40,6 +42,7 @@ namespace Business.Concrete
                 PhoneNumber = userForRegisterDto.PhoneNumber,
                 Status = true
             };
+
             _userService.Add(user);
             return new SuccessDataResult<User>(user, Messages.UserRegistered);
         }
@@ -62,7 +65,7 @@ namespace Business.Concrete
 
         public IResult UserExists(string email)
         {
-            if (_userService.GetByEmail(email) != null)
+            if (_userService.GetByEmail(email).Data != null)
             {
                 return new ErrorResult(Messages.UserAlreadyExists);
             }
@@ -75,5 +78,6 @@ namespace Business.Concrete
             var accessToken = _tokenHelper.CreateToken(user, claims.Data);
             return new SuccessDataResult<AccessToken>(accessToken, Messages.AccessTokenCreated);
         }
+        
     }
 }
