@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
@@ -21,6 +22,7 @@ namespace Business.Concrete
             _addressDal = addressDal;
         }
 
+        [SecuredOperation("admin,customer, user")]
         [ValidationAspect(typeof(AddressValidator))]
         public IResult Add(Address address)
         {
@@ -29,6 +31,7 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+        [SecuredOperation("admin,customer, user")]
         public IResult Delete(Address address)
         {
             _addressDal.Delete(address);
@@ -61,6 +64,7 @@ namespace Business.Concrete
             return new SuccessDataResult<Address>(_addressDal.Get(a => a.Id == id));
         }
 
+        [SecuredOperation("admin,customer, user")]
         [ValidationAspect(typeof(AddressValidator))]
         public IResult Update(Address address)
         {
@@ -68,5 +72,6 @@ namespace Business.Concrete
 
             return new SuccessResult();
         }
+
     }
 }

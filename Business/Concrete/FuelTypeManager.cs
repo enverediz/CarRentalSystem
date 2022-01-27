@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
@@ -23,6 +24,7 @@ namespace Business.Concrete
             _fuelTypeDal = fuelTypeDal;
         }
 
+        [SecuredOperation("admin")]
         [ValidationAspect(typeof(FuelTypeValidator))]
         public IResult Add(FuelType fuelType)
         {
@@ -37,6 +39,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.FuelTypeAdded);
         }
 
+        [SecuredOperation("admin")]
         public IResult Delete(FuelType fuelType)
         {
             _fuelTypeDal.Delete(fuelType);
@@ -54,6 +57,7 @@ namespace Business.Concrete
             return new SuccessDataResult<FuelType>(_fuelTypeDal.Get(f=>f.Id == id));
         }
 
+        [SecuredOperation("admin")]
         [ValidationAspect(typeof(FuelTypeValidator))]
         public IResult Update(FuelType fuelType)
         {

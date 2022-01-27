@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
@@ -23,6 +24,7 @@ namespace Business.Concrete
             _carBodyTypeDal = carBodyTypeDal;
         }
 
+        [SecuredOperation("admin")]
         [ValidationAspect(typeof(CarBodyTypeValidator))]
         public IResult Add(CarBodyType carBodyType)
         {
@@ -37,6 +39,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CarBodyTypeAdded);
         }
 
+        [SecuredOperation("admin")]
         public IResult Delete(CarBodyType carBodyType)
         {
             _carBodyTypeDal.Delete(carBodyType);
@@ -54,6 +57,7 @@ namespace Business.Concrete
             return new SuccessDataResult<CarBodyType>(_carBodyTypeDal.Get(c=> c.Id == id));
         }
 
+        [SecuredOperation("admin")]
         [ValidationAspect(typeof(CarBodyTypeValidator))]
         public IResult Update(CarBodyType carBodyType)
         {

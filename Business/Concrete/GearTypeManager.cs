@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
@@ -22,6 +23,7 @@ namespace Business.Concrete
             _gearTypeDal = gearTypeDal;
         }
 
+        [SecuredOperation("admin")]
         [ValidationAspect(typeof(GearTypeValidator))]
         public IResult Add(GearType gearType)
         {
@@ -36,6 +38,7 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+        [SecuredOperation("admin")]
         public IResult Delete(GearType gearType)
         {
             _gearTypeDal.Delete(gearType);
@@ -52,6 +55,7 @@ namespace Business.Concrete
             return new SuccessDataResult<GearType>(_gearTypeDal.Get(g=>g.Id == id));
         }
 
+        [SecuredOperation("admin")]
         [ValidationAspect(typeof(GearTypeValidator))]
         public IResult Update(GearType gearType)
         {

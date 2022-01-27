@@ -33,5 +33,7 @@ namespace Business.Constants
         public static string UserAlreadyExists = "Kullanıcı zaten mevcut!";
         public static string AccessTokenCreated = "Accesstoken başarıyla oluşturuldu.";
         public static string IdentityIsIncorrect = "Kimlik bilgileri hatalı!";
+        public static string CarCanNotRented = "Bu araba henüz kiralanamaz!";
+        public static string ReservationCancellationControl = "Rezervasyon en geç 1 gün kala iptal edilebilir!";
     }
 }

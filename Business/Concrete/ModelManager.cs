@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
@@ -22,6 +23,7 @@ namespace Business.Concrete
             _modelDal = modelDal;
         }
 
+        [SecuredOperation("admin")]
         [ValidationAspect(typeof(ModelValidator))]
         public IResult Add(Model model)
         {
@@ -36,6 +38,7 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+        [SecuredOperation("admin")]
         public IResult Delete(Model model)
         {
             _modelDal.Delete(model);
@@ -58,6 +61,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Model>>(_modelDal.GetAll(m=> m.BrandId == id));
         }
 
+        [SecuredOperation("admin")]
         [ValidationAspect(typeof(ModelValidator))]
         public IResult Update(Model model)
         {

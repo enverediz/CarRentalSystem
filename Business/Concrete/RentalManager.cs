@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
+using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
@@ -17,16 +19,19 @@ namespace Business.Concrete
     public class RentalManager : IRentalService
     {
         IRentalDal _rentalDal;
+        ICarService _carService;
 
-        public RentalManager(IRentalDal rentalDal)
+        public RentalManager(IRentalDal rentalDal, ICarService carService)
         {
             _rentalDal = rentalDal;
+            _carService = carService;
         }
 
+        [SecuredOperation("admin,customer,user")]
         [ValidationAspect(typeof(RentalValidator))]
         public IResult Add(Rental rental)
         {
-            IResult result = BusinessRules.Run(CheckIfReturnDate(rental));
+            IResult result = BusinessRules.Run(CheckIfReturnDate(rental), CheckIfCarStatus(rental));
             if (result != null)
             {
                 return result;
@@ -34,14 +39,20 @@ namespace Business.Concrete
 
             rental.CreateDate = DateTime.Now;
             _rentalDal.Add(rental);
+
+            var car = _carService.GetById(rental.CarId);
+            car.Data.Status = false;
+
             return new SuccessResult();
         }
 
+        [SecuredOperation("admin,customer")]
         public IDataResult<List<Rental>> GetAll()
         {
             return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll());
         }
 
+        [SecuredOperation("admin,customer,user")]
         public IDataResult<Rental> GetById(int id)
         {
             return new SuccessDataResult<Rental>(_rentalDal.Get(r=>r.Id== id)); ;
@@ -52,11 +63,13 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
+        [SecuredOperation("admin,customer")]
         public IDataResult<List<Rental>> GetRentalsByCarId(int id)
         {
             return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(r=>r.CarId == id)) ;
         }
 
+        [SecuredOperation("admin,customer,user")]
         public IDataResult<List<Rental>> GetRentalsByUserId(int id)
         {
             return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(r=>r.UserId == id));
@@ -70,5 +83,16 @@ namespace Business.Concrete
             }
             return new SuccessResult();
         }
+        private IResult CheckIfCarStatus(Rental rental)
+        {
+            var car = _carService.GetById(rental.CarId);
+            
+            if (!car.Data.Status)
+            {
+                return new ErrorResult(Messages.CarCanNotRented);
+            }
+            return new SuccessResult();
+        }
+        
     }
 }

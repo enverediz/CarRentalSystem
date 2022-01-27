@@ -37,6 +37,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CarAdded);
         }
 
+        [SecuredOperation("admin,customer,car.admin")]
         [CacheRemoveAspect("ICarService.Get")]
         public IResult Delete(Car car)
         {
@@ -98,6 +99,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(c=>c.ModelId==id));
         }
 
+        [SecuredOperation("admin,customer,car.admin")]
         [ValidationAspect(typeof(CarValidator))]
         [CacheRemoveAspect("ICarService.Get")]
         public IResult Update(Car car)

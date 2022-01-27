@@ -1,6 +1,8 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -21,14 +23,22 @@ namespace Business.Concrete
             _cityDal = cityDal;
         }
 
+        [SecuredOperation("admin")]
         [ValidationAspect(typeof(CityValidator))]
         public IResult Add(City city)
         {
+            IResult result = BusinessRules.Run(CheckIfCityNameExists(city.CityName));
+            if (result != null)
+            {
+                return result;
+            }
+
             _cityDal.Add(city);
 
             return new SuccessResult();
         }
 
+        [SecuredOperation("admin")]
         public IResult Delete(City city)
         {
             _cityDal.Delete(city);
@@ -46,11 +56,22 @@ namespace Business.Concrete
             return new SuccessDataResult<City>(_cityDal.Get(c => c.Id ==id));
         }
 
+        [SecuredOperation("admin")]
         [ValidationAspect(typeof(CityValidator))]
         public IResult Update(City city)
         {
             _cityDal.Update(city);
 
+            return new SuccessResult();
+        }
+
+        private IResult CheckIfCityNameExists(string cityName)
+        {
+            var result = _cityDal.GetAll(c => c.CityName == cityName).Any();
+            if (result)
+            {
+                return new ErrorResult();
+            }
             return new SuccessResult();
         }
     }
