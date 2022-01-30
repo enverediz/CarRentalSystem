@@ -2,6 +2,7 @@
 using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
@@ -28,6 +29,7 @@ namespace Business.Concrete
 
         [SecuredOperation("admin,customer,user")]
         [ValidationAspect(typeof(ReservationValidator))]
+        [TransactionScopeAspect]
         public IResult Add(Reservation reservation)
         {
             reservation.CreateDate = DateTime.Now;
@@ -79,6 +81,7 @@ namespace Business.Concrete
 
         [SecuredOperation("admin,customer,user")]
         [ValidationAspect(typeof(ReservationValidator))]
+        [TransactionScopeAspect]
         public IResult Update(Reservation reservation)
         {
             _reservationDal.Update(reservation);
@@ -88,7 +91,7 @@ namespace Business.Concrete
 
         private IResult ReservationCancellationControl(Reservation reservation)
         {
-            if (DateTime.Now.AddHours(24) <= reservation.ReservationDate)
+            if (DateTime.Now.AddHours(24) >= reservation.ReservationDate)
             {
                 return new ErrorResult(Messages.ReservationCancellationControl);
             }

@@ -26,6 +26,7 @@ namespace Business.Concrete
         [ValidationAspect(typeof(PaymentValidator))]
         public IResult Add(Payment payment)
         {
+            payment.PaymentDate = DateTime.Now;
             _paymentDal.Add(payment);
 
             return new SuccessResult();

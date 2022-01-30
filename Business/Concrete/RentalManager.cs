@@ -2,6 +2,7 @@
 using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
@@ -29,6 +30,7 @@ namespace Business.Concrete
 
         [SecuredOperation("admin,customer,user")]
         [ValidationAspect(typeof(RentalValidator))]
+        [TransactionScopeAspect]
         public IResult Add(Rental rental)
         {
             IResult result = BusinessRules.Run(CheckIfReturnDate(rental), CheckIfCarStatus(rental));

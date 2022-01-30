@@ -26,6 +26,7 @@ namespace Business.Concrete
         [ValidationAspect(typeof(InvoiceValidator))]
         public IResult Add(Invoice invoice)
         {
+            invoice.InvoiceDate= DateTime.Now;
             _invoiceDal.Add(invoice);
 
             return new SuccessResult();
