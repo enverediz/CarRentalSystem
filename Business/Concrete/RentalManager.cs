@@ -41,7 +41,7 @@ namespace Business.Concrete
 
             rental.CreateDate = DateTime.Now;
             _rentalDal.Add(rental);
-
+                        
             var car = _carService.GetById(rental.CarId);
             car.Data.Status = false;
 
@@ -60,9 +60,10 @@ namespace Business.Concrete
             return new SuccessDataResult<Rental>(_rentalDal.Get(r=>r.Id== id), Messages.RentalListed); 
         }
 
+        [SecuredOperation("admin,customer,user")]
         public IDataResult<List<RentalDetailDto>> GetRentalDetails()
         {
-            throw new NotImplementedException();
+            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetails(), Messages.RentalDetailsBrought);
         }
 
         [SecuredOperation("admin,customer")]

@@ -125,5 +125,6 @@ namespace Business.Constants
         public static string UserOperationClaimsListed = "Kullanıcı operasyon yetkileri listelendi.";
         public static string UserOperationClaimDeleted = "Kullanıcı operasyon yetkileri silindi!";
         public static string UserOperationClaimAdded = "Kullanıcı operasyon yetkisi eklenlendi.";
+        public static string RentalDetailsBrought = "Kiralama detayları getirildi.";
     }
 }
