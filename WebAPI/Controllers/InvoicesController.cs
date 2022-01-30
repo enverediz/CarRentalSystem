@@ -1,0 +1,96 @@
+﻿using Business.Abstract;
+using Entities.Concrete;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace WebAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class InvoicesController : ControllerBase
+    {
+        IInvoiceService _invoiceService;
+
+        public InvoicesController(IInvoiceService invoiceService)
+        {
+            _invoiceService = invoiceService;
+        }
+
+        [HttpGet("getall")]
+        public IActionResult GetAll()
+        {
+            var result = _invoiceService.GetAll();
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("getbyid")]
+        public IActionResult GetById(int id)
+        {
+            var result = _invoiceService.GetById(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("getbyrentalid")]
+        public IActionResult GetByRentalId(int id)
+        {
+            var result = _invoiceService.GetInvoicesByRentalId(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("getbyaddressid")]
+        public IActionResult GetByAddressId(int id)
+        {
+            var result = _invoiceService.GetInvoicesByAddressId(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPost("add")]
+        public IActionResult Add(Invoice invoice)
+        {
+            var result = _invoiceService.Add(invoice);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPost("delete")]
+        public IActionResult Delete(Invoice invoice)
+        {
+            var result = _invoiceService.Delete(invoice);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPost("update")]
+        public IActionResult Update(Invoice invoice)
+        {
+            var result = _invoiceService.Update(invoice);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+    }
+}
