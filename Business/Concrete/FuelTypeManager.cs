@@ -44,17 +44,17 @@ namespace Business.Concrete
         {
             _fuelTypeDal.Delete(fuelType);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.FuelTypeDeleted);
         }
 
         public IDataResult<List<FuelType>> GetAll()
         {
-            return new SuccessDataResult<List<FuelType>>(_fuelTypeDal.GetAll());
+            return new SuccessDataResult<List<FuelType>>(_fuelTypeDal.GetAll(), Messages.FuelTypesListed);
         }
 
         public IDataResult<FuelType> GetById(int id)
         {
-            return new SuccessDataResult<FuelType>(_fuelTypeDal.Get(f=>f.Id == id));
+            return new SuccessDataResult<FuelType>(_fuelTypeDal.Get(f=>f.Id == id), Messages.FuelTypeListed);
         }
 
         [SecuredOperation("admin")]
@@ -63,7 +63,7 @@ namespace Business.Concrete
         {
             _fuelTypeDal.Update(fuelType);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.FuelTypeUpdated);
         }
 
         private IResult CheckIfFuelTypeNameExists(string fuelTypeName)
@@ -71,7 +71,7 @@ namespace Business.Concrete
             var result = _fuelTypeDal.GetAll(f => f.FuelTypeName == fuelTypeName).Any();
             if (result)
             {
-                return new ErrorResult();
+                return new ErrorResult(Messages.FuelTypeNameExists);
             }
             return new SuccessResult();
         }

@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.BusinessAspects.Autofac;
+using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Entities.Concrete;
@@ -27,26 +28,26 @@ namespace Business.Concrete
         public IResult Add(UserOperationClaim userOperationClaim)
         {
             _userOperationClaimDal.Add(userOperationClaim);
-            return new SuccessResult();
+            return new SuccessResult(Messages.UserOperationClaimAdded);
         }
 
         [SecuredOperation("admin")]
         public IResult Delete(UserOperationClaim userOperationClaim)
         {
             _userOperationClaimDal.Delete(userOperationClaim);
-            return new SuccessResult();
+            return new SuccessResult(Messages.UserOperationClaimDeleted);
         }
 
         [SecuredOperation("admin")]
         public IDataResult<List<UserOperationClaim>> GetAll()
         {
-            return new SuccessDataResult<List<UserOperationClaim>>(_userOperationClaimDal.GetAll());
+            return new SuccessDataResult<List<UserOperationClaim>>(_userOperationClaimDal.GetAll(), Messages.UserOperationClaimsListed);
         }
 
         [SecuredOperation("admin")]
         public IDataResult<UserOperationClaim> GetById(int id)
         {
-            return new SuccessDataResult<UserOperationClaim>(_userOperationClaimDal.Get(u => u.Id == id));
+            return new SuccessDataResult<UserOperationClaim>(_userOperationClaimDal.Get(u => u.Id == id), Messages.UserOperationClaimListed);
         }
 
         [SecuredOperation("admin")]
@@ -66,7 +67,7 @@ namespace Business.Concrete
         public IResult Update(UserOperationClaim userOperationClaim)
         {
             _userOperationClaimDal.Update(userOperationClaim);
-            return new SuccessResult();
+            return new SuccessResult(Messages.UserOperationClaimUpdated);
         }
     }
 }

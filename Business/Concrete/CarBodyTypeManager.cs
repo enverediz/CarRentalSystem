@@ -44,17 +44,17 @@ namespace Business.Concrete
         {
             _carBodyTypeDal.Delete(carBodyType);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.CarBodyTypeDeleted);
         }
 
         public IDataResult<List<CarBodyType>> GetAll()
         {
-            return new SuccessDataResult<List<CarBodyType>>(_carBodyTypeDal.GetAll());
+            return new SuccessDataResult<List<CarBodyType>>(_carBodyTypeDal.GetAll(), Messages.CarBodyTypesListed);
         }
 
         public IDataResult<CarBodyType> GetById(int id)
         {
-            return new SuccessDataResult<CarBodyType>(_carBodyTypeDal.Get(c=> c.Id == id));
+            return new SuccessDataResult<CarBodyType>(_carBodyTypeDal.Get(c=> c.Id == id), Messages.CarBodyTypeListed);
         }
 
         [SecuredOperation("admin")]
@@ -63,7 +63,7 @@ namespace Business.Concrete
         {
             _carBodyTypeDal.Update(carBodyType);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.CarBodyTypeUpdated);
         }
 
         private IResult CheckIfCarBodyTypeNameExists(string carBodyTypeName)
@@ -71,7 +71,7 @@ namespace Business.Concrete
             var result = _carBodyTypeDal.GetAll(c => c.CarBodyTypeName == carBodyTypeName).Any();
             if (result)
             {
-                return new ErrorResult();
+                return new ErrorResult(Messages.CarBodyTypeNameExists);
             }
             return new SuccessResult();
         }

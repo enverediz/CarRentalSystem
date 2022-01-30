@@ -12,6 +12,7 @@ namespace Business.Abstract
     {
         IDataResult<List<Payment>> GetAll();
         IDataResult<List<Payment>> GetPaymentsByRentalId(int id);
+        IDataResult<List<Payment>> GetPaymentsByCarId(int id);
         IDataResult<Payment> GetById(int id);
         IResult Add(Payment payment);
         IResult Delete(Payment payment);

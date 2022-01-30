@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.BusinessAspects.Autofac;
+using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
@@ -28,7 +29,7 @@ namespace Business.Concrete
         {
             _addressDal.Add(address);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.AddressAdded);
         }
 
         [SecuredOperation("admin,customer, user")]
@@ -36,7 +37,7 @@ namespace Business.Concrete
         {
             _addressDal.Delete(address);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.AddressDeleted);
         }
 
         public IDataResult<List<Address>> GetAddressesByUserId(int id)
@@ -56,12 +57,12 @@ namespace Business.Concrete
 
         public IDataResult<List<Address>> GetAll()
         {
-            return new SuccessDataResult<List<Address>>(_addressDal.GetAll());
+            return new SuccessDataResult<List<Address>>(_addressDal.GetAll(), Messages.AddressesListed);
         }
 
         public IDataResult<Address> GetById(int id)
         {
-            return new SuccessDataResult<Address>(_addressDal.Get(a => a.Id == id));
+            return new SuccessDataResult<Address>(_addressDal.Get(a => a.Id == id), Messages.AddressListed);
         }
 
         [SecuredOperation("admin,customer, user")]
@@ -70,7 +71,7 @@ namespace Business.Concrete
         {
             _addressDal.Update(address);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.AddressUpdated);
         }
 
     }

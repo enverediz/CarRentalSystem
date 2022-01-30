@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.BusinessAspects.Autofac;
+using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
@@ -35,7 +36,7 @@ namespace Business.Concrete
 
             _modelDal.Add(model);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.ModelAdded);
         }
 
         [SecuredOperation("admin")]
@@ -43,17 +44,17 @@ namespace Business.Concrete
         {
             _modelDal.Delete(model);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.ModelDeleted);
         }
 
         public IDataResult<List<Model>> GetAll()
         {
-            return new SuccessDataResult<List<Model>>(_modelDal.GetAll());
+            return new SuccessDataResult<List<Model>>(_modelDal.GetAll(), Messages.ModelsListed);
         }
 
         public IDataResult<Model> GetById(int id)
         {
-            return new SuccessDataResult<Model>(_modelDal.Get(m=>m.Id == id));
+            return new SuccessDataResult<Model>(_modelDal.Get(m=>m.Id == id), Messages.ModelListed);
         }
 
         public IDataResult<List<Model>> GetModelsByBrandId(int id)
@@ -67,7 +68,7 @@ namespace Business.Concrete
         {
             _modelDal.Update(model);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.ModelUpdated);
         }
 
         private IResult CheckIfModelNameExists(string modelName)
@@ -75,7 +76,7 @@ namespace Business.Concrete
             var result = _modelDal.GetAll(m => m.ModelName == modelName).Any();
             if (result)
             {
-                return new ErrorResult();
+                return new ErrorResult(Messages.ModelNameExists);
             }
             return new SuccessResult();
         }

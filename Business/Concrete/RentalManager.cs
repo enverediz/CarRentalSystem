@@ -45,19 +45,19 @@ namespace Business.Concrete
             var car = _carService.GetById(rental.CarId);
             car.Data.Status = false;
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.RentalAdded);
         }
 
         [SecuredOperation("admin,customer")]
         public IDataResult<List<Rental>> GetAll()
         {
-            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll());
+            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(), Messages.RentalsListed);
         }
 
         [SecuredOperation("admin,customer,user")]
         public IDataResult<Rental> GetById(int id)
         {
-            return new SuccessDataResult<Rental>(_rentalDal.Get(r=>r.Id== id)); ;
+            return new SuccessDataResult<Rental>(_rentalDal.Get(r=>r.Id== id), Messages.RentalListed); 
         }
 
         public IDataResult<List<RentalDetailDto>> GetRentalDetails()
@@ -81,7 +81,7 @@ namespace Business.Concrete
         {
             if (rental.ReturnDate == null)
             {
-                return new ErrorResult();
+                return new ErrorResult(Messages.CarCanNotRented);
             }
             return new SuccessResult();
         }

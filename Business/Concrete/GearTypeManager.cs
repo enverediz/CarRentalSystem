@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.BusinessAspects.Autofac;
+using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
@@ -35,24 +36,24 @@ namespace Business.Concrete
 
             _gearTypeDal.Add(gearType);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.GearTypeAdded);
         }
 
         [SecuredOperation("admin")]
         public IResult Delete(GearType gearType)
         {
             _gearTypeDal.Delete(gearType);
-            return new SuccessResult();
+            return new SuccessResult(Messages.GearTypeDeleted);
         }
 
         public IDataResult<List<GearType>> GetAll()
         {
-            return new SuccessDataResult<List<GearType>>(_gearTypeDal.GetAll());
+            return new SuccessDataResult<List<GearType>>(_gearTypeDal.GetAll(), Messages.GearTypesListed);
         }
 
         public IDataResult<GearType> GetById(int id)
         {
-            return new SuccessDataResult<GearType>(_gearTypeDal.Get(g=>g.Id == id));
+            return new SuccessDataResult<GearType>(_gearTypeDal.Get(g=>g.Id == id), Messages.GearTypeListed);
         }
 
         [SecuredOperation("admin")]
@@ -61,7 +62,7 @@ namespace Business.Concrete
         {
             _gearTypeDal.Update(gearType);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.GearTypeUpdated);
         }
 
         private IResult CheckIfGearTypeNameExists(string gearTypeName)
@@ -69,7 +70,7 @@ namespace Business.Concrete
             var result = _gearTypeDal.GetAll(g => g.GearTypeName == gearTypeName).Any();
             if (result)
             {
-                return new ErrorResult();
+                return new ErrorResult(Messages.GearTypeNameExists);
             }
             return new SuccessResult();
         }

@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.BusinessAspects.Autofac;
+using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
@@ -35,7 +36,7 @@ namespace Business.Concrete
 
             _cityDal.Add(city);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.CityAdded);
         }
 
         [SecuredOperation("admin")]
@@ -43,17 +44,17 @@ namespace Business.Concrete
         {
             _cityDal.Delete(city);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.CityDeleted);
         }
 
         public IDataResult<List<City>> GetAll()
         {
-            return new SuccessDataResult<List<City>>(_cityDal.GetAll());
+            return new SuccessDataResult<List<City>>(_cityDal.GetAll(), Messages.CitiesListed);
         }
 
         public IDataResult<City> GetById(int id)
         {
-            return new SuccessDataResult<City>(_cityDal.Get(c => c.Id ==id));
+            return new SuccessDataResult<City>(_cityDal.Get(c => c.Id ==id), Messages.CityListed);
         }
 
         [SecuredOperation("admin")]
@@ -62,7 +63,7 @@ namespace Business.Concrete
         {
             _cityDal.Update(city);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.CityUpdated);
         }
 
         private IResult CheckIfCityNameExists(string cityName)
@@ -70,7 +71,7 @@ namespace Business.Concrete
             var result = _cityDal.GetAll(c => c.CityName == cityName).Any();
             if (result)
             {
-                return new ErrorResult();
+                return new ErrorResult(Messages.CityNameExists);
             }
             return new SuccessResult();
         }

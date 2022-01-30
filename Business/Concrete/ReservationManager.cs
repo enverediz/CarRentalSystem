@@ -38,7 +38,7 @@ namespace Business.Concrete
             var car = _carService.GetById(reservation.CarId);
             car.Data.Status = false;
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.ReservationAdded);
         }
 
         [SecuredOperation("admin,customer,user")]
@@ -52,19 +52,19 @@ namespace Business.Concrete
 
             _reservationDal.Delete(reservation);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.ReservationDeleted);
         }
 
         [SecuredOperation("admin,customer")]
         public IDataResult<List<Reservation>> GetAll()
         {
-            return new SuccessDataResult<List<Reservation>>(_reservationDal.GetAll());
+            return new SuccessDataResult<List<Reservation>>(_reservationDal.GetAll(), Messages.ReservationsListed);
         }
 
         [SecuredOperation("admin,customer,user")]
         public IDataResult<Reservation> GetById(int id)
         {
-            return new SuccessDataResult<Reservation>(_reservationDal.Get(r => r.Id == id));
+            return new SuccessDataResult<Reservation>(_reservationDal.Get(r => r.Id == id), Messages.ReservationListed);
         }
 
         [SecuredOperation("admin,customer")]
@@ -86,7 +86,7 @@ namespace Business.Concrete
         {
             _reservationDal.Update(reservation);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.ReservationUpdated);
         }
 
         private IResult ReservationCancellationControl(Reservation reservation)

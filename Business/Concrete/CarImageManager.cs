@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.BusinessAspects.Autofac;
+using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
@@ -39,7 +40,7 @@ namespace Business.Concrete
             carImage.CreateDate = DateTime.Now;
 
             _carImageDal.Add(carImage);
-            return new SuccessResult();
+            return new SuccessResult(Messages.CarImageAdded);
         }
 
         [SecuredOperation("admin,customer")]
@@ -50,7 +51,7 @@ namespace Business.Concrete
             var result = BusinessRules.Run(FileHelper.Delete(oldpath));
 
             _carImageDal.Delete(carImage);
-            return new SuccessResult();
+            return new SuccessResult(Messages.CarImageDeleted);
         }
 
         public IDataResult<List<CarImage>> GetAll()
@@ -86,9 +87,9 @@ namespace Business.Concrete
                 carImage.CreateDate = DateTime.Now;
 
                 _carImageDal.Update(carImage);
-                return new SuccessResult();
+                return new SuccessResult(Messages.CarImageUpdated);
             }
-            return new ErrorResult();
+            return new ErrorResult(Messages.CarImageNotUpdated);
         }
 
         private IResult CheckCarImageLimit(int id)
@@ -96,7 +97,7 @@ namespace Business.Concrete
             var result = _carImageDal.GetAll(c => c.Id == id).Count;
             if (result > 5)
             {
-                return new ErrorResult();
+                return new ErrorResult(Messages.CarImageLimitExceeded);
             }
             return new SuccessResult();
         }

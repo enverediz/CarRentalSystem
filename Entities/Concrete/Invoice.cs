@@ -12,6 +12,7 @@ namespace Entities.Concrete
         public int Id { get; set; }
         public int RentalId { get; set; }
         public int AddressId { get; set; }
+        public int CarId { get; set; }
         public DateTime InvoiceDate { get; set; }
         public decimal TotalPrice { get; set; }
     }

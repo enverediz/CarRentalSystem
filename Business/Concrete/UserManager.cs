@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Business.Adapters;
 using Business.Constants;
+using Business.BusinessAspects.Autofac;
 
 namespace Business.Concrete
 {
@@ -41,12 +42,14 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+        [SecuredOperation("admin,customer,user")]
         public IResult Delete(User user)
         {
             _userDal.Delete(user);
             return new SuccessResult();
         }
 
+        [SecuredOperation("admin")]
         public IDataResult<List<User>> GetAll()
         {
             return new SuccessDataResult<List<User>>(_userDal.GetAll());
@@ -57,16 +60,19 @@ namespace Business.Concrete
             return new SuccessDataResult<User>(_userDal.Get(u => u.Email == email));
         }
 
+        [SecuredOperation("admin,customer,user")]
         public IDataResult<User> GetById(int id)
         {
             return new SuccessDataResult<User>(_userDal.Get(u=>u.Id == id));
         }
 
+        [SecuredOperation("admin")]
         public IDataResult<List<OperationClaim>> GetClaims(User user)
         {
             return new SuccessDataResult<List<OperationClaim>>(_userDal.GetClaims(user));
         }
 
+        [SecuredOperation("admin,user,customer")]
         [ValidationAspect(typeof(UserValidator))]
         public IResult Update(User user)
         {
@@ -79,7 +85,7 @@ namespace Business.Concrete
             var result = _userDal.GetAll(u => u.Email == email).Any();
             if (result)
             {
-                return new ErrorResult();
+                return new ErrorResult(Messages.EmailExists);
             }
             return new SuccessResult();
         }

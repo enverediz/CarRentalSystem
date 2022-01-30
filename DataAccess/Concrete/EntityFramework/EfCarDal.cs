@@ -25,13 +25,14 @@ namespace DataAccess.Concrete.EntityFramework
                              join ft in context.FuelTypes on c.FuelTypeId equals ft.Id
                              join gt in context.GearTypes on c.GearTypeId equals gt.Id
                              join m in context.Models on c.ModelId equals m.Id
+                             join ci in context.CarImages on c.Id equals ci.CarId
 
                              select new CarDetailDto
                              {
                                  CarId = c.Id, BrandName = b.BrandName, CarBodyTypeName = cbt.CarBodyTypeName,
                                  ColorName = cl.ColorName, FuelTypeName = ft.FuelTypeName, GearTypeName = gt.GearTypeName,
                                  ModelName = m.ModelName, ModelYear = c.ModelYear, DailyPrice= c.DailyPrice, 
-                                 Description = c.Description
+                                 Description = c.Description, ImagePath = ci.ImagePath
                              };
                 return result.ToList();
             }

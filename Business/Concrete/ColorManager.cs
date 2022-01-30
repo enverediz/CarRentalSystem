@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.BusinessAspects.Autofac;
+using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
@@ -35,7 +36,7 @@ namespace Business.Concrete
 
             _colorDal.Add(color);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.ColorAdded);
         }
 
         [SecuredOperation("admin")]
@@ -43,17 +44,17 @@ namespace Business.Concrete
         {
             _colorDal.Delete(color);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.ColorDeleted);
         }
 
         public IDataResult<List<Color>> GetAll()
         {
-            return new SuccessDataResult<List<Color>>(_colorDal.GetAll());
+            return new SuccessDataResult<List<Color>>(_colorDal.GetAll(), Messages.ColorsListed);
         }
 
         public IDataResult<Color> GetById(int id)
         {
-            return new SuccessDataResult<Color>(_colorDal.Get(c=>c.Id==id));
+            return new SuccessDataResult<Color>(_colorDal.Get(c=>c.Id==id), Messages.ColorListed);
         }
 
         [SecuredOperation("admin")]
@@ -62,7 +63,7 @@ namespace Business.Concrete
         {
             _colorDal.Update(color);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.ColorUpdated);
         }
 
         private IResult CheckIfColorNameExists(string colorName)
@@ -70,7 +71,7 @@ namespace Business.Concrete
             var result = _colorDal.GetAll(c => c.ColorName == colorName).Any();
             if (result)
             {
-                return new ErrorResult();
+                return new ErrorResult(Messages.ColorNameExists);
             }
             return new SuccessResult();
         }

@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.BusinessAspects.Autofac;
+using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
@@ -29,7 +30,7 @@ namespace Business.Concrete
             customer.CreateDate = DateTime.Now;
             _customerDal.Add(customer);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.CustomerAdded);
         }
 
         [SecuredOperation("admin,customer")]
@@ -37,17 +38,17 @@ namespace Business.Concrete
         {
             _customerDal.Delete(customer);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.CustomerDeleted);
         }
 
         public IDataResult<List<Customer>> GetAll()
         {
-            return new SuccessDataResult<List<Customer>>(_customerDal.GetAll());
+            return new SuccessDataResult<List<Customer>>(_customerDal.GetAll(), Messages.CustomersListed);
         }
 
         public IDataResult<Customer> GetById(int id)
         {
-            return new SuccessDataResult<Customer>(_customerDal.Get(c => c.Id == id)); ;
+            return new SuccessDataResult<Customer>(_customerDal.Get(c => c.Id == id), Messages.CustomerListed); ;
         }
 
         public IDataResult<List<Customer>> GetCustomersByCityId(int id)
@@ -71,7 +72,7 @@ namespace Business.Concrete
         {
             _customerDal.Update(customer);
 
-            return new SuccessResult();
+            return new SuccessResult(Messages.CustomerUpdated);
         }
     }
 }
