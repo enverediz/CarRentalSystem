@@ -41,9 +41,8 @@ namespace Business.Concrete
 
             rental.CreateDate = DateTime.Now;
             _rentalDal.Add(rental);
-                        
-            var car = _carService.GetById(rental.CarId);
-            car.Data.Status = false;
+            
+            CarStatusUpdateMethod(rental);
 
             return new SuccessResult(Messages.RentalAdded);
         }
@@ -97,5 +96,12 @@ namespace Business.Concrete
             return new SuccessResult();
         }
         
+        private IResult CarStatusUpdateMethod(Rental rental)
+        {
+            var car = _carService.GetById(rental.CarId);
+            car.Data.Status = false;
+            var result = _carService.Update(car.Data);
+            return result;
+        }
     }
 }

@@ -24,7 +24,7 @@ namespace Business.Concrete
             _operationClaimDal = operationClaimDal;
         }
 
-        [SecuredOperation("admin")]
+        //[SecuredOperation("admin")]
         [ValidationAspect(typeof(OperationClaimValidator))]
         public IResult Add(OperationClaim operationClaim)
         {
@@ -39,7 +39,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.OperationClaimAdded);
         }
 
-        [SecuredOperation("admin")]
+        //[SecuredOperation("admin")]
         public IResult Delete(OperationClaim operationClaim)
         {
             _operationClaimDal.Delete(operationClaim);
@@ -47,19 +47,19 @@ namespace Business.Concrete
             return new SuccessResult(Messages.OperationClaimDeleted);
         }
 
-        [SecuredOperation("admin")]
+        //[SecuredOperation("admin")]
         public IDataResult<List<OperationClaim>> GetAll()
         {
             return new SuccessDataResult<List<OperationClaim>>(_operationClaimDal.GetAll(), Messages.OperationClaimsListed);
         }
 
-        [SecuredOperation("admin")]
+        //[SecuredOperation("admin")]
         public IDataResult<OperationClaim> GetById(int id)
         {
             return new SuccessDataResult<OperationClaim>(_operationClaimDal.Get(o => o.Id == id), Messages.OperationClaimListed);
         }
 
-        [SecuredOperation("admin")]
+        //[SecuredOperation("admin")]
         [ValidationAspect(typeof(OperationClaimValidator))]
         public IResult Update(OperationClaim operationClaim)
         {
