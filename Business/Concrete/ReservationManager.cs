@@ -35,8 +35,7 @@ namespace Business.Concrete
             reservation.CreateDate = DateTime.Now;
             _reservationDal.Add(reservation);
 
-            var car = _carService.GetById(reservation.CarId);
-            car.Data.Status = false;
+            CarStatusUpdateMethod(reservation);
 
             return new SuccessResult(Messages.ReservationAdded);
         }
@@ -96,6 +95,14 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.ReservationCancellationControl);
             }
             return new SuccessResult();
+        }
+
+        private IResult CarStatusUpdateMethod(Reservation reservation)
+        {
+            var car = _carService.GetById(reservation.CarId);
+            car.Data.Status = false;
+            var result = _carService.Update(car.Data);
+            return result;
         }
 
     }
